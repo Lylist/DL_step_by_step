@@ -5,12 +5,14 @@ import numpy as np
 
 class LayerBase:
 
-    def __init__(self, shape=(1, 1), b=0):
-        self.shape = shape
+    def __init__(self, size=0, b=0, name=""):
+        self.size = size
         self.b = b
-        self.W = np.zeros(shape)
-        self.X = np.zeros(shape[0])
-        self.Y = np.zeros()
+        self.W = None
+        self.Y = np.zeros(size)
+        self.pre = None
+        self.post = None
+        self.Name = name
 
     def activation_function(self, x):
         """
@@ -20,9 +22,18 @@ class LayerBase:
         """
         pass
 
-    def cal(self, pre):
+    def cal(self):
         """
         计算当前层神经元
-        :param pre: 上层网络
         :return: void
         """
+        if self.pre is None:
+            raise Exception("{} layer's pre-layer have error".format(self.Name))
+
+        try:
+            self.Y = np.dot(self.pre.Y, self.W) + self.b
+        except Exception as e:
+            print(e)
+            raise Exception("{} layer update value has error".format(self.Name))
+
+
