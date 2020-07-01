@@ -5,14 +5,14 @@ import numpy as np
 
 class LayerBase:
 
-    def __init__(self, size=0, b=0, name=""):
+    def __init__(self, size=0, b=0, name="", layer_type="base"):
         self.size = size
         self.b = b
         self.W = None
         self.Y = np.zeros(size)
         self.pre = None
-        self.post = None
         self.Name = name
+        self.type = layer_type
 
     def activation_function(self, x):
         """
@@ -32,6 +32,7 @@ class LayerBase:
 
         try:
             self.Y = np.dot(self.pre.Y, self.W) + self.b
+            self.Y = self.activation_function(self.Y)
         except Exception as e:
             print(e)
             raise Exception("{} layer update value has error".format(self.Name))
